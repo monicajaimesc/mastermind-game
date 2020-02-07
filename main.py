@@ -6,6 +6,9 @@ RED = (255,0,0)
 BLUE = (0, 0, 255)
 GREEN = (0, 255, 0)
 YELLOW = (255,255,0)
+GRAY = (158, 148, 146)
+BLACK = (0, 245, 0)
+WHITE = (255, 255, 255)
 
 def main():
     global run, screen, circleRed, circleGreen, circleYellow, circleBlue
@@ -20,6 +23,13 @@ def main():
     py.display.set_caption("Master Mind!")
     icon = py.image.load('brain.png')
     py.display.set_icon(icon)
+    # create a surface into screen
+    rectangle = py.Surface((0.7 * 800, 0.7 * 600 + 50))
+    rectangle.fill(GRAY)
+    screen.blit(rectangle, (110, 100))
+    #py.draw.rect(screen, GRAY, (110, 100, 0.7 * 800, 0.7 * 600 + 50))
+    #for i in range(4):
+    py.draw.ellipse(screen, RED, [40, 40, 40, 40], 4)
 
     # game loop
     run = True
@@ -36,32 +46,27 @@ def main():
         circleYellow = py.draw.circle(screen, YELLOW, (80, 270), 20)
         py.display.update()
 
-def inradius(point, radius):
-    dif = ()
+def inradius(point, radius, mouse):
+    dif = (point[0] - mouse[0], point[1] - mouse[1])
+    distance = math.sqrt(dif[0]**2 + dif[1]**2)
+    if distance < radius:
+        return True
+    else:
+        return False
 
 def changeColor():
     global color
     mouse = py.mouse.get_pos()
-    posRed = (80, 120)
-    tuRed = (posRed[0] - mouse[0], posRed[1] - mouse[1])
-    hRed = math.sqrt(tuRed[0] * tuRed[0] + tuRed[1] * tuRed[1])
-    posBlue = (80, 170)
-    tuBlue = (posBlue[0] - mouse[0], posBlue[1] - mouse[1])
-    hBlue = math.sqrt(tuBlue[0] * tuBlue[0] + tuBlue[1] * tuBlue[1])
-    posGreen = (80, 220)
-    tuGreen = (posGreen[0] - mouse[0], posGreen[1] - mouse[1])
-    hGreen = math.sqrt(tuGreen[0] * tuGreen[0] + tuGreen[1] * tuGreen[1])
-    posYellow = (80, 270)
-    tuYellow = (posYellow[0] - mouse[0], posYellow[1] - mouse[1])
-    hYellow = math.sqrt(tuYellow[0] * tuYellow[0] + tuYellow[1] * tuYellow[1])
-    if hRed < 20:
+    if inradius((80, 120), 20, mouse):
         color = RED
-    elif hBlue < 20:
+    elif inradius((80, 170), 20, mouse):
         color = BLUE
-    elif hGreen < 20:
+    elif inradius((80, 220), 20, mouse):
         color = GREEN
-    elif hYellow < 20:
+    elif inradius((80, 270), 20, mouse):
         color = YELLOW
+    else:
+        color = WHITE
 
 def getPos():
     pos = py.mouse.get_pos()
