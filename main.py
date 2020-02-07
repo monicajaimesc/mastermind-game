@@ -24,12 +24,13 @@ def main():
     icon = py.image.load('brain.png')
     py.display.set_icon(icon)
     # create a surface into screen
-    rectangle = py.Surface((0.7 * 800, 0.7 * 600 + 50))
+    rectangle = py.Surface((0.4 * 800, 0.7 * 600 + 50))
     rectangle.fill(GRAY)
     screen.blit(rectangle, (110, 100))
     #py.draw.rect(screen, GRAY, (110, 100, 0.7 * 800, 0.7 * 600 + 50))
-    #for i in range(4):
-    py.draw.ellipse(screen, RED, [40, 40, 40, 40], 4)
+    for i in range(4):
+        for j in range(9):
+            py.draw.circle(screen, WHITE, (175 + 60* i, 130 + 50*j), 20)
 
     # game loop
     run = True
@@ -65,8 +66,6 @@ def changeColor():
         color = GREEN
     elif inradius((80, 270), 20, mouse):
         color = YELLOW
-    else:
-        color = WHITE
 
 def getPos():
     pos = py.mouse.get_pos()
