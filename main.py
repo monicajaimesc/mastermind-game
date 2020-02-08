@@ -1,5 +1,6 @@
 import pygame as py
 import math
+import random
 
 #palette of colors
 RED = (255,0,0)
@@ -40,6 +41,8 @@ def main():
             py.draw.circle(screen, WHITE, (175 + 60* i, 130 + 50*j), 20)
         positions.append(layer)
 
+    # serie ganadora!!!
+    serie_ganadora = correct_number()
     # traspone postion into resutl 
     result = []
     for i in range(len(positions[0])):
@@ -51,8 +54,11 @@ def main():
     # game loop
     run = True
     counter = 0
+    
     while run:
+        dict_result = {}
         for event in py.event.get():
+            
             # insert loop here for all layers
             if event.type == py.MOUSEBUTTONUP:
                 # print circles
@@ -66,9 +72,15 @@ def main():
                     #returns the position where to start to draw
                     tupla = clicklayer(positions[counter], mouse)
                     if color is not None:
+                        dict_result[str(tupla)] = color
                         switchcolor(tupla)
                 elif clickchecker([(int(0.55 * 800), int(0.90 * 600))], mouse):
                     # check if the click it's in save
+                    state = send_input(dict_result, serie_ganadora)
+                    if state == 'Gano':
+                        print('You win!')
+                    else:
+                        print("Hits: {}, Coincidences: {}".format(state[0], state[1]))
                     counter += 1
                 #drawCircle()
                 py.display.update()
@@ -127,6 +139,48 @@ def clicklayer(layer_fun, click):
 
 def switchcolor(tupla):
     py.draw.circle(screen, color, tupla, 20)
+
+def correct_number():
+    lista = [RED, BLUE, GREEN, YELLOW]
+    serie = {}
+    for i in range(4):
+        #lista[random.randrange(1, 4)]
+        serie[str(i)] = lista[random.randrange(1, 4)]
+    return serie
+
+def send_input(dict_layer, serie):
+    counter = 0
+    hint = 0
+    for i in dict_layer.keys():
+        print("DEbuggging: {}, {}".format(counter, hint))
+        if '130' in i:
+            if dict_layer[i] == serie['0']:
+                counter += 1
+            elif dict_layer[i] in serie.values():
+                hint += 1
+        elif '180' in i:
+            if dict_layer[i] == serie['1']:
+                counter += 1
+            elif dict_layer[i] in serie.values():
+                hint += 1
+        # after 230 will be 280 an so on..
+        elif '230' in i:
+            if dict_layer[i] == serie['2']:
+                counter += 1
+            elif dict_layer[i] in serie.values():
+                hint += 1
+        elif '280' in i:
+            if dict_layer[i] == serie['3']:
+                counter += 1
+            elif dict_layer[i] in serie.values():
+                hint += 1
+    if counter == 4:
+        return 'Gano'
+    else:
+        return (counter, hint)
+    
+
+
 
 if __name__ == '__main__':
     main()
